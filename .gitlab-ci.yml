@@ -4,18 +4,20 @@ image: docker:stable
 # improved performance.
 variables:
   DOCKER_DRIVER: overlay2
+  DOCKER_REGISTRY: "git.crynton.com:49153"
 
 services:
-- docker:dind
+  - docker:dind
 
 before_script:
-- docker info
+  - docker info
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $DOCKER_REGISTRY
 
 build:
   stage: build
   script:
   - docker build -t typo3 .
-  - docker tag typo3 git.crynton.com:49153/docker/typo3
-  - docker push git.crynton.com:49153/docker/typo3
+  - docker tag typo3 $DOCKER_REGISTRY/docker/typo3
+  - docker push $DOCKER_REGISTRY/docker/typo3
 
 # todo: add tests
