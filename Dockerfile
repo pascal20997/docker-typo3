@@ -24,7 +24,7 @@ RUN { \
 		echo 'opcache.enable_cli=1'; \
 	} > /usr/local/etc/php/conf.d/01-opcache-recommended.ini
 
-# from https://github.com/TYPO3/TYPO3.CMS/blob/v9.2.0/INSTALL.md
+# from https://github.com/TYPO3/TYPO3.CMS/blob/v9.3.0/INSTALL.md
 RUN { \
 		echo 'upload_max_filesize=100M'; \
 		echo 'post_max_size=100M'; \
@@ -45,11 +45,17 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 	&& php -r "unlink('composer-setup.php');" \
         && mv composer.phar /usr/local/bin/composer
 
+# change ownership to www-data
+RUN chown -R www-data:www-data /var/www
+
+USER www-data
 RUN composer create-project typo3/cms-base-distribution typo3 ${TYPO3VERSION}
 WORKDIR /var/www/html/typo3
 
+USER root
 COPY 000-default.conf /etc/apache2/sites-available
 
 # cleanup
 RUN apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+USER www-data
