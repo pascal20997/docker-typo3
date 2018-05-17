@@ -58,4 +58,3 @@ COPY 000-default.conf /etc/apache2/sites-available
 # cleanup
 RUN apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-USER www-data
