@@ -11,7 +11,7 @@ RUN a2enmod rewrite && a2enmod deflate
 
 # php
 RUN apt-get update && apt-get install -y imagemagick git nano libwebp-dev libjpeg-dev libfreetype6-dev libicu-dev \
-libzzip-dev \
+libzzip-dev openssh-server \
                    && yes '' | pecl install -f apcu \
                    && docker-php-ext-configure gd --with-jpeg-dir=/usr/include --with-webp-dir=/usr/include --with-freetype-dir=/usr/include \
                    && docker-php-ext-install gd mbstring opcache mysqli json intl zip
@@ -39,6 +39,9 @@ RUN { \
 		echo 'opcache.validate_timestamps=0'; \
         echo 'expose_php = Off'; \
 	} > /usr/local/etc/php/conf.d/02-typo3-recommended.ini
+
+# configure openssh-server
+RUN echo "\nPermitRootLogin no\nPasswordAuthentication no\nUsePAM no" >> /etc/ssh/sshd_config
 
 # install composer
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
@@ -71,3 +74,4 @@ RUN composer create-project typo3/cms-base-distribution typo3 ${TYPO3VERSION}
 WORKDIR /var/www/html/typo3
 
 USER root
+RUN service ssh start
