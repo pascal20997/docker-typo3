@@ -68,10 +68,11 @@ COPY 000-default.conf /etc/apache2/sites-available
 RUN apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+RUN systemctl enable ssh.socket
+
 # install TYPO3
 USER crynton
 RUN composer create-project typo3/cms-base-distribution typo3 ${TYPO3VERSION}
 WORKDIR /var/www/html/typo3
 
 USER root
-RUN service ssh start
