@@ -69,3 +69,5 @@ RUN apt-get clean \
 USER crynton
 RUN composer create-project typo3/cms-base-distribution typo3 ${TYPO3VERSION}
 WORKDIR /var/www/html/typo3
+
+USER root
