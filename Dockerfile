@@ -46,7 +46,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
         && mv composer.phar /usr/local/bin/composer
 
 # add user crynton to group www-data
-RUN useradd -g www-data -m -s “/bin/bash” crynton
+RUN useradd -g www-data -m -s "/bin/bash" crynton
 
 # change ownership to www-data
 RUN chown -R crynton:www-data /var/www
