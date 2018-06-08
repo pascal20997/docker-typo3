@@ -4,6 +4,7 @@ FROM php:7.2-apache
 ENV TYPO3VERSION ^9
 ENV SERVER_ADMIN pleaseSetTheEnvironment@variable.tld
 ENV SURF_DOWNLOAD_URL https://github.com/TYPO3/Surf/releases/download/2.0.0-beta7/surf.phar
+ENV DOCUMENT_ROOT /var/www/html/typo3/public
 
 # apache
 RUN a2enmod rewrite && a2enmod deflate
