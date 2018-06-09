@@ -1,11 +1,13 @@
 FROM php:7.2-apache
 
 # TYPO3 version (default is ^9)
-ENV TYPO3VERSION ^9
+ENV TYPO3_VERSION ^9
 ENV SERVER_ADMIN pleaseSetTheEnvironment@variable.tld
 ENV SURF_DOWNLOAD_URL https://github.com/TYPO3/Surf/releases/download/2.0.0-beta7/surf.phar
 ENV DOCUMENT_ROOT /var/www/html/typo3/public
 ENV APACHE_RUN_USER crynton
+ENV INSTALL_TYPO3 true
+ENV START_SSHD true
 
 # apache
 RUN a2enmod rewrite && a2enmod deflate
@@ -64,16 +66,12 @@ RUN useradd -g www-data -m -s "/bin/bash" crynton
 RUN chown -R crynton:www-data /var/www
 
 COPY 000-default.conf /etc/apache2/sites-available
+COPY crynton-start.sh /usr/local/bin/crynton-start
+RUN chmod+x /usr/local/bin/crynton-start
 
 # cleanup
 RUN apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN systemctl enable ssh.socket
-
-# install TYPO3
-USER crynton
-RUN composer create-project typo3/cms-base-distribution typo3 ${TYPO3VERSION}
 WORKDIR /var/www/html/typo3
-
-USER root
+CMD ["crynton-start"]
