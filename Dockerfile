@@ -67,7 +67,7 @@ RUN chown -R crynton:www-data /var/www
 
 COPY 000-default.conf /etc/apache2/sites-available
 COPY crynton-start.sh /usr/local/bin/crynton-start
-RUN chmod+x /usr/local/bin/crynton-start
+RUN chmod +x /usr/local/bin/crynton-start
 
 # cleanup
 RUN apt-get clean \
