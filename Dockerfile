@@ -5,6 +5,7 @@ ENV TYPO3VERSION ^9
 ENV SERVER_ADMIN pleaseSetTheEnvironment@variable.tld
 ENV SURF_DOWNLOAD_URL https://github.com/TYPO3/Surf/releases/download/2.0.0-beta7/surf.phar
 ENV DOCUMENT_ROOT /var/www/html/typo3/public
+ENV APACHE_RUN_USER crynton
 
 # apache
 RUN a2enmod rewrite && a2enmod deflate
@@ -59,7 +60,7 @@ RUN mkdir /usr/local/surf \
 # add user crynton to group www-data
 RUN useradd -g www-data -m -s "/bin/bash" crynton
 
-# change ownership to www-data
+# change ownership to crynton:www-data
 RUN chown -R crynton:www-data /var/www
 
 COPY 000-default.conf /etc/apache2/sites-available
