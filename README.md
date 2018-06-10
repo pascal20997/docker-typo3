@@ -10,7 +10,7 @@ You can configure this docker container by using the following environment varia
 | TYPO3_VERSION     | The version which should be used for installing TYPO3 via composer        | ^9                                                  |
 | SERVER_ADMIN      | E-Mail of the server admin (for apache)                                   | pleaseSetTheEnvironment@variable.tld                |
 | SURF_DOWNLOAD_URL | Download-URL to be used for installing surf                               | Download URL for surf 2.0.0-beta7                   |
-| DOCUMENT_ROOT     | Document root folder                                                      | /var/www/html/typo3/public (create-project default) |
+| DOCUMENT_ROOT     | Document root folder                                                      | /home/crynton/htdocs/public (create-project default) |
 | INSTALL_TYPO3     | Set to a different value then true to not install TYPO3 with first boot  | true                                                |
 | START_SSHD        | Set to a different value then true to not start openssh-server on boot   | true                                                | 
 ## Examples

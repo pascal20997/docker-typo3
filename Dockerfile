@@ -4,7 +4,7 @@ FROM php:7.2-apache
 ENV TYPO3_VERSION ^9
 ENV SERVER_ADMIN pleaseSetTheEnvironment@variable.tld
 ENV SURF_DOWNLOAD_URL https://github.com/TYPO3/Surf/releases/download/2.0.0-beta7/surf.phar
-ENV DOCUMENT_ROOT /home/crynton/htdocs/typo3/public
+ENV DOCUMENT_ROOT /home/crynton/htdocs/public
 ENV APACHE_RUN_USER crynton
 ENV INSTALL_TYPO3 true
 ENV START_SSHD true
