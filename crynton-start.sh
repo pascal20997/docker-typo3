@@ -15,11 +15,24 @@ if [ "${INSTALL_TYPO3}" = "true" ]; then
         echo "The file composer.json exists! Skip TYPO3 installation..."
     else
         echo "The file composer.json does not exists! Install TYPO3 ${TYPO3_VERSION}..."
-        su -l crynton -c "composer create-project typo3/cms-base-distribution typo3 ${TYPO3_VERSION}"
-#        if [ $? -ne 0 ]; then
-#            echo "Something went wrong while installing TYPO3 :( Please check the composer output above!"
-#            exit 1
-#        fi
+        PROJECT_ROOT="$(echo "${DOCUMENT_ROOT}" | rev | cut -d'/' -f2- | rev)"
+        if [ ! -d "${PROJECT_ROOT}" ]; then
+            echo "Create project root..."
+            if ! mkdir -p "${PROJECT_ROOT}"
+            then
+                echo "Could not create project root ${PROJECT_ROOT}!"
+                exit 1
+            fi
+            echo "Fix permissions..."
+            chown -R crynton:www-data "${PROJECT_ROOT}"
+            chmod -R 775 "${PROJECT_ROOT}"
+        fi
+        echo "Run create-project..."
+        if ! su -l crynton -c "composer create-project typo3/cms-base-distribution ${PROJECT_ROOT} ${TYPO3_VERSION}"
+        then
+            echo "Something went wrong while installing TYPO3 :( Please check the composer output above!"
+            exit 1
+        fi
     fi
 else
     echo "Installation of TYPO3 will be skipped because INSTALL_TYPO3 does not equal true..."
@@ -28,12 +41,17 @@ fi
 # start open-ssh server if START_SSHD = true
 if [ "${START_SSHD}" = "true" ]; then
     echo "Start openssh-server..."
-        if [ "$(/usr/sbin/sshd -D)"  -ne 0 ]; then
-            echo "Something went wrong while starting openssh-server..."
-            exit 1
-        fi
+    if ! /etc/init.d/ssh start
+    then
+        echo "Error while starting openssh-server!"
+        exit 1
+    fi
 fi
 
 # start apache2 server
 echo "Start apache2..."
-apache2-foreground
+if ! apache2-foreground
+then
+    echo "Error while starting apache2!"
+    exit 1
+fi
