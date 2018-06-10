@@ -1,7 +1,5 @@
 FROM php:7.2-apache
 
-# TYPO3 version (default is ^9)
-ENV TYPO3_VERSION ^9
 ENV SERVER_ADMIN pleaseSetTheEnvironment@variable.tld
 ENV SURF_DOWNLOAD_URL https://github.com/TYPO3/Surf/releases/download/2.0.0-beta7/surf.phar
 ENV DOCUMENT_ROOT /home/crynton/htdocs/public
@@ -43,8 +41,11 @@ RUN { \
         echo 'expose_php = Off'; \
 	} > /usr/local/etc/php/conf.d/02-typo3-recommended.ini
 
+# configure apache2
+RUN echo "\nServerTokens Prod\nServerSignature Off\n" >> /etc/apache2/apache2.conf
+
 # configure openssh-server
-RUN echo "\nPermitRootLogin no\nPasswordAuthentication no\nUsePAM no" >> /etc/ssh/sshd_config
+RUN echo "\nPermitRootLogin no\nPasswordAuthentication no\nUsePAM no\n" >> /etc/ssh/sshd_config
 
 # install composer
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
@@ -73,5 +74,5 @@ RUN chmod +x /usr/local/bin/crynton-start
 RUN apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-WORKDIR /var/www/html/typo3
+WORKDIR ${DOCUMENT_ROOT}
 CMD ["crynton-start"]
