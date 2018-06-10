@@ -8,6 +8,20 @@
 #            |___/                                           
 #
 
+# check if document root exists
+PROJECT_ROOT="$(echo "${DOCUMENT_ROOT}" | rev | cut -d'/' -f2- | rev)"
+if [ ! -d "${PROJECT_ROOT}" ]; then
+    echo "Create project root..."
+    if ! mkdir -p "${PROJECT_ROOT}"
+    then
+        echo "Could not create project root ${PROJECT_ROOT}!"
+        exit 1
+    fi
+    echo "Fix permissions..."
+    chown -R crynton:www-data "${PROJECT_ROOT}"
+    chmod -R 775 "${PROJECT_ROOT}"
+fi
+
 # install TYPO3 if INSTALL_TYPO3 = true
 if [ "${INSTALL_TYPO3}" = "true" ]; then
     echo "Check if composer.json exists..."
@@ -15,18 +29,6 @@ if [ "${INSTALL_TYPO3}" = "true" ]; then
         echo "The file composer.json exists! Skip TYPO3 installation..."
     else
         echo "The file composer.json does not exists! Install TYPO3 ${TYPO3_VERSION}..."
-        PROJECT_ROOT="$(echo "${DOCUMENT_ROOT}" | rev | cut -d'/' -f2- | rev)"
-        if [ ! -d "${PROJECT_ROOT}" ]; then
-            echo "Create project root..."
-            if ! mkdir -p "${PROJECT_ROOT}"
-            then
-                echo "Could not create project root ${PROJECT_ROOT}!"
-                exit 1
-            fi
-            echo "Fix permissions..."
-            chown -R crynton:www-data "${PROJECT_ROOT}"
-            chmod -R 775 "${PROJECT_ROOT}"
-        fi
         echo "Run create-project..."
         if ! su -l crynton -c "composer create-project typo3/cms-base-distribution ${PROJECT_ROOT} ${TYPO3_VERSION}"
         then
