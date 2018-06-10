@@ -19,7 +19,7 @@ if [ "${INSTALL_TYPO3}" = "true" ]; then
 #        if [ $? -ne 0 ]; then
 #            echo "Something went wrong while installing TYPO3 :( Please check the composer output above!"
 #            exit 1
-        fi
+#        fi
     fi
 else
     echo "Installation of TYPO3 will be skipped because INSTALL_TYPO3 does not equal true..."
@@ -28,8 +28,7 @@ fi
 # start open-ssh server if START_SSHD = true
 if [ "${START_SSHD}" = "true" ]; then
     echo "Start openssh-server..."
-    /usr/sbin/sshd -D
-        if [ $? -ne 0 ]; then
+        if [ "$(/usr/sbin/sshd -D)"  -ne 0 ]; then
             echo "Something went wrong while starting openssh-server..."
             exit 1
         fi
