@@ -12,10 +12,10 @@ RUN a2enmod rewrite && a2enmod deflate
 
 # php
 RUN apt-get update && apt-get install -y imagemagick git nano libwebp-dev libjpeg-dev libfreetype6-dev libicu-dev \
-libzzip-dev openssh-server \
+libzzip-dev openssh-server php7.2-pgsql \
                    && yes '' | pecl install -f apcu \
                    && docker-php-ext-configure gd --with-jpeg-dir=/usr/include --with-webp-dir=/usr/include --with-freetype-dir=/usr/include \
-                   && docker-php-ext-install gd mbstring opcache mysqli json intl zip
+                   && docker-php-ext-install gd mbstring opcache mysqli json intl zip pgsql
 
 # from https://secure.php.net/manual/en/opcache.installation.php
 RUN { \
