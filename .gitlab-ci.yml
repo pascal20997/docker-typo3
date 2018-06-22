@@ -1,5 +1,10 @@
 image: docker:stable
 
+stages:
+  - build
+  - test
+  - deploy
+
 # When using dind, it's wise to use the overlayfs driver for
 # improved performance.
 variables:
@@ -13,11 +18,27 @@ before_script:
   - docker info
   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $DOCKER_REGISTRY
 
-build:
+build-and-push:
   stage: build
   script:
-  - docker build -t typo3 .
-  - docker tag typo3 $DOCKER_REGISTRY/docker/typo3
-  - docker push $DOCKER_REGISTRY/docker/typo3
+    - docker build -t typo3 .
+    - docker tag typo3 $DOCKER_REGISTRY/docker/typo3
+    - docker push $DOCKER_REGISTRY/docker/typo3
 
-# todo: add tests
+# todo: add better tests
+test-container:
+  stage: test
+  script:
+    - docker run typo3dev php -v
+    - docker run typo3dev convert -version
+    - docker run typo3dev composer -V
+
+deploy:
+  stage: deploy
+  script:
+    - mkdir -p ~/.ssh
+    - echo "$DEPLOY_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan github.com >> ~/.ssh/known_hosts
+    - git remote add github git@github.com:pascal20997/docker-typo3.git
+    - git push github master
