@@ -29,9 +29,9 @@ build-and-push:
 test-container:
   stage: test
   script:
-    - docker run typo3dev php -v
-    - docker run typo3dev convert -version
-    - docker run typo3dev composer -V
+    - docker run typo3 php -v
+    - docker run typo3 convert -version
+    - docker run typo3 composer -V
 
 deploy:
   stage: deploy
