@@ -18,12 +18,10 @@ before_script:
   - docker info
   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $DOCKER_REGISTRY
 
-build-and-push:
+build:
   stage: build
   script:
     - docker build -t typo3 .
-    - docker tag typo3 $DOCKER_REGISTRY/docker/typo3
-    - docker push $DOCKER_REGISTRY/docker/typo3
 
 # todo: add better tests
 test-container:
@@ -33,7 +31,13 @@ test-container:
     - docker run typo3 convert -version
     - docker run typo3 composer -V
 
-deploy:
+push-to-registry:
+  stage: deploy
+  script:
+    - docker tag typo3 $DOCKER_REGISTRY/docker/typo3
+    - docker push $DOCKER_REGISTRY/docker/typo3
+
+push-on-github:
   stage: deploy
   script:
     - mkdir -p ~/.ssh
