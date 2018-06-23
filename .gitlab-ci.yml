@@ -61,4 +61,4 @@ push-on-github:
     - git config --global user.name "Crynton Runner"
     - git config --global user.email "info@crynton.com"
     - git checkout master
-    - git push git@github.com:pascal20997/docker-typo3.git master
+    - git push --force git@github.com:pascal20997/docker-typo3.git master
