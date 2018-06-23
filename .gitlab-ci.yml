@@ -51,7 +51,7 @@ push-to-registry:
     - docker push $CONTAINER_RELEASE_IMAGE
 
 push-on-github:
-  image: debian:latest
+  image: buildpack-deps:latest
   stage: release
   script:
     - mkdir -p ~/.ssh
