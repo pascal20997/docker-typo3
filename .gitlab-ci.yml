@@ -59,4 +59,4 @@ push-on-github:
     - chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan github.com >> ~/.ssh/known_hosts
     - git remote add github git@github.com:pascal20997/docker-typo3.git
-    - git push github master
+    - git push --force github master
