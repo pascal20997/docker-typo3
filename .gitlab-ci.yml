@@ -42,8 +42,8 @@ test-imagemagick:
 test-composer:
   stage: test
   script:
-      - docker pull $CONTAINER_TEST_IMAGE
-      - docker run $CONTAINER_TEST_IMAGE convert -version
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker run $CONTAINER_TEST_IMAGE convert -version
 
 push-to-registry:
   stage: release
@@ -53,6 +53,7 @@ push-to-registry:
     - docker push $CONTAINER_RELEASE_IMAGE
 
 push-on-github:
+  image: debian:latest
   stage: release
   script:
     - mkdir -p ~/.ssh
