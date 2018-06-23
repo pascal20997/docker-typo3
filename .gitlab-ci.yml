@@ -50,6 +50,14 @@ push-to-registry:
     - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
     - docker push $CONTAINER_RELEASE_IMAGE
 
+# allow failure e.g. if remote already exists
+prepare-push-on-github:
+  image: buildpack-deps:latest
+  stage: release
+  script:
+    - git remote add github git@github.com:pascal20997/docker-typo3.git
+  allow_failure: true
+
 push-on-github:
   image: buildpack-deps:latest
   stage: release
@@ -58,5 +66,5 @@ push-on-github:
     - echo "$DEPLOY_KEY" | tr -d '\r' > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan github.com >> ~/.ssh/known_hosts
-    - git remote add github git@github.com:pascal20997/docker-typo3.git
     - git push --force github master
+    - git remote remove github
