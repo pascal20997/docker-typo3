@@ -19,10 +19,9 @@ services:
 build:
   stage: build
   script:
-    - echo "skipped"
- #   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $DOCKER_REGISTRY
- #   - docker build -t $CONTAINER_TEST_IMAGE .
- #   - docker push $CONTAINER_TEST_IMAGE
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $DOCKER_REGISTRY
+    - docker build -t $CONTAINER_TEST_IMAGE .
+    - docker push $CONTAINER_TEST_IMAGE
 
 # todo: add better tests
 test-php:
@@ -46,24 +45,20 @@ test-composer:
 push-to-registry:
   stage: release
   script:
-    - echo "skip"
-#    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $DOCKER_REGISTRY
-#    - docker pull $CONTAINER_TEST_IMAGE
-#    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
-#    - docker push $CONTAINER_RELEASE_IMAGE
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $DOCKER_REGISTRY
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
+    - docker push $CONTAINER_RELEASE_IMAGE
 
 push-on-github:
   image: buildpack-deps:latest
   stage: release
   script:
-#    - mkdir -p ~/.ssh
-#    - echo "$DEPLOY_KEY" | tr -d '\r' > ~/.ssh/id_rsa
-#    - chmod 600 ~/.ssh/id_rsa
-#    - ssh-keyscan github.com >> ~/.ssh/known_hosts
+    - mkdir -p ~/.ssh
+    - echo "$DEPLOY_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan github.com >> ~/.ssh/known_hosts
     - git config --global user.name "Crynton Runner"
     - git config --global user.email "info@crynton.com"
-    - git status
-    - git branch -a
-    - ls -lah
-    - cat .gitlab-ci.yml
-  #  - git push git@github.com:pascal20997/docker-typo3.git master
+    - git checkout master
+    - git push git@github.com:pascal20997/docker-typo3.git master
