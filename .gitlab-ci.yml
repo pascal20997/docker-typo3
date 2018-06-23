@@ -60,4 +60,5 @@ push-on-github:
     - ssh-keyscan github.com >> ~/.ssh/known_hosts
     - git config --global user.name "Crynton Runner"
     - git config --global user.email "info@crynton.com"
-    - git push git@github.com:pascal20997/docker-typo3.git $CI_COMMIT_REF_NAME:master
+    - git fetch --prune
+    - git push --prune git@github.com:pascal20997/docker-typo3.git +refs/remotes/origin/*:refs/heads/* +refs/tags/*:refs/tags/*
