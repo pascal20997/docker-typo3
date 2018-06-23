@@ -3,13 +3,15 @@ image: docker:stable
 stages:
   - build
   - test
-  - deploy
+  - release
 
 # When using dind, it's wise to use the overlayfs driver for
 # improved performance.
 variables:
   DOCKER_DRIVER: overlay2
-  DOCKER_REGISTRY: "git.crynton.com:49153"
+  DOCKER_REGISTRY: git.crynton.com:49153
+  CONTAINER_TEST_IMAGE: git.crynton.com:49153/docker/typo3:$CI_COMMIT_REF_NAME
+  CONTAINER_RELEASE_IMAGE: git.crynton.com:49153/docker/typo3:latest
 
 services:
   - docker:dind
@@ -21,24 +23,37 @@ before_script:
 build:
   stage: build
   script:
-    - docker build -t typo3 .
+    - docker build -t $CONTAINER_TEST_IMAGE .
+    - docker push $CONTAINER_TEST_IMAGE
 
 # todo: add better tests
-test-container:
+test-php:
   stage: test
   script:
+    - docker pull $CONTAINER_TEST_IMAGE
     - docker run typo3 php -v
-    - docker run typo3 convert -version
     - docker run typo3 composer -V
 
-push-to-registry:
-  stage: deploy
+test-imagemagick:
+  stage: test
   script:
-    - docker tag typo3 $DOCKER_REGISTRY/docker/typo3
-    - docker push $DOCKER_REGISTRY/docker/typo3
+      - docker pull $CONTAINER_TEST_IMAGE
+
+test-composer:
+  stage: test
+  script:
+      - docker pull $CONTAINER_TEST_IMAGE
+      - docker run typo3 convert -version
+
+push-to-registry:
+  stage: release
+  script:
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
+    - docker push $CONTAINER_RELEASE_IMAGE
 
 push-on-github:
-  stage: deploy
+  stage: release
   script:
     - mkdir -p ~/.ssh
     - echo "$DEPLOY_KEY" | tr -d '\r' > ~/.ssh/id_rsa
