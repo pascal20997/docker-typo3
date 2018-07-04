@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y imagemagick git nano libwebp-dev libjpe
 libzzip-dev openssh-server libpq-dev \
                    && yes '' | pecl install -f apcu \
                    && docker-php-ext-configure gd --with-jpeg-dir=/usr/include --with-webp-dir=/usr/include --with-freetype-dir=/usr/include \
-                   && docker-php-ext-install gd mbstring opcache mysqli json intl zip pdo pdo_pgsql
+                   && docker-php-ext-install gd mbstring opcache mysqli json intl zip pdo pdo_pgsql pgsql
 
 # from https://secure.php.net/manual/en/opcache.installation.php
 RUN { \
