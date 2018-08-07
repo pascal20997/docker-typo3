@@ -30,7 +30,7 @@ if [ "${INSTALL_TYPO3}" = "true" ]; then
     else
         echo "The file composer.json does not exists! Install TYPO3 ${TYPO3_VERSION}..."
         echo "Run create-project..."
-        if ! su -l crynton -c "composer {$COMPOSER_ADDITIONAL_ARGUMENTS} create-project typo3/cms-base-distribution ${PROJECT_ROOT} ${TYPO3_VERSION}"
+        if ! su -l crynton -c "composer ${COMPOSER_ADDITIONAL_ARGUMENTS} create-project typo3/cms-base-distribution ${PROJECT_ROOT} ${TYPO3_VERSION}"
         then
             echo "Something went wrong while installing TYPO3 :( Please check the composer output above!"
             exit 1
