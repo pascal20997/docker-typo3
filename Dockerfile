@@ -74,5 +74,5 @@ RUN chmod +x /usr/local/bin/crynton-start
 RUN apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-WORKDIR /home/crynton/htdocs
+WORKDIR /home/crynton
 CMD ["crynton-start"]
