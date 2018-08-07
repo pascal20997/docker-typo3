@@ -17,10 +17,12 @@ if [ ! -d "${PROJECT_ROOT}" ]; then
         echo "Could not create project root ${PROJECT_ROOT}!"
         exit 1
     fi
-    echo "Fix permissions..."
-    chown -R crynton:www-data "${PROJECT_ROOT}"
-    chmod -R 775 "${PROJECT_ROOT}"
 fi
+
+# set folder permissions
+echo "Set permissions..."
+chown -R crynton:www-data "${PROJECT_ROOT}"
+chmod -R 775 "${PROJECT_ROOT}"
 
 # install TYPO3 if INSTALL_TYPO3 = true
 if [ "${INSTALL_TYPO3}" = "true" ]; then

@@ -12,7 +12,7 @@ RUN a2enmod rewrite && a2enmod deflate
 
 # php
 RUN apt-get update && apt-get install -y imagemagick git nano libwebp-dev libjpeg-dev libfreetype6-dev libicu-dev \
-libzzip-dev openssh-server libpq-dev \
+libzzip-dev openssh-server libpq-dev unzip \
                    && yes '' | pecl install -f apcu \
                    && docker-php-ext-configure gd --with-jpeg-dir=/usr/include --with-webp-dir=/usr/include --with-freetype-dir=/usr/include \
                    && docker-php-ext-install gd mbstring opcache mysqli json intl zip pdo pdo_pgsql pgsql
@@ -62,9 +62,6 @@ RUN mkdir /usr/local/surf \
 
 # add user crynton to group www-data
 RUN useradd -g www-data -m -s "/bin/bash" crynton
-
-# change ownership to crynton:www-data
-RUN chown -R crynton:www-data /var/www
 
 COPY 000-default.conf /etc/apache2/sites-available
 COPY crynton-start.sh /usr/local/bin/crynton-start
