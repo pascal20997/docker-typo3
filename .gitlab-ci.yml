@@ -28,19 +28,19 @@ test-php:
   stage: test
   script:
     - docker pull $CONTAINER_TEST_IMAGE
-    - docker run $CONTAINER_TEST_IMAGE php -v
-
-test-imagemagick:
-  stage: test
-  script:
-    - docker pull $CONTAINER_TEST_IMAGE
-    - docker run $CONTAINER_TEST_IMAGE composer -V
+    - docker run $CONTAINER_TEST_IMAGE "php -v"
 
 test-composer:
   stage: test
   script:
     - docker pull $CONTAINER_TEST_IMAGE
-    - docker run $CONTAINER_TEST_IMAGE convert -version
+    - docker run $CONTAINER_TEST_IMAGE "composer -V"
+
+test-imagemagick:
+  stage: test
+  script:
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker run $CONTAINER_TEST_IMAGE "convert -version"
 
 push-to-registry:
   stage: release
