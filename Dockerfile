@@ -65,8 +65,7 @@ RUN useradd -g www-data -m -s "/bin/bash" crynton
 
 COPY 000-default.conf /etc/apache2/sites-available
 COPY crynton-start.sh /usr/local/bin/crynton-start
-COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint
-RUN chmod +x /usr/local/bin/crynton-start && chmod +x /usr/local/bin/docker-entrypoint
+RUN chmod +x /usr/local/bin/crynton-start
 
 # cleanup
 RUN apt-get clean \
