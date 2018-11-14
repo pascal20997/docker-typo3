@@ -9,17 +9,19 @@ stages:
 # improved performance.
 variables:
   DOCKER_DRIVER: overlay2
-  DOCKER_REGISTRY: git.crynton.com:49153
-  CONTAINER_TEST_IMAGE: git.crynton.com:49153/docker/typo3:$CI_COMMIT_REF_NAME
-  CONTAINER_RELEASE_IMAGE: git.crynton.com:49153/docker/typo3:latest
+  DOCKER_REGISTRY: docker-registry.crynton.com
+  CONTAINER_TEST_IMAGE: docker-registry.crynton.com/docker/typo3:$CI_COMMIT_REF_SLUG
+  CONTAINER_RELEASE_IMAGE: docker-registry.crynton.com/docker/typo3
 
 services:
   - docker:dind
 
+before_script:
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $DOCKER_REGISTRY 
+
 build:
   stage: build
   script:
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $DOCKER_REGISTRY
     - docker build -t $CONTAINER_TEST_IMAGE .
     - docker push $CONTAINER_TEST_IMAGE
 
@@ -42,14 +44,25 @@ test-imagemagick:
     - docker pull $CONTAINER_TEST_IMAGE
     - docker run $CONTAINER_TEST_IMAGE convert -version
 
-push-to-registry:
+release-latest:
   stage: release
   script:
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $DOCKER_REGISTRY
     - docker pull $CONTAINER_TEST_IMAGE
     - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
-    - docker push $CONTAINER_RELEASE_IMAGE
+    - docker push $CONTAINER_RELEASE_IMAGE:latest
 
+release-tagged:
+  stage: release
+  script:
+    - docker pull $CONTAINER_RELEASE_IMAGE:latest
+    - docker push $CONTAINER_RELEASE_IMAGE:$CI_COMMIT_REF_SLUG
+  only:
+    - branches
+    - tags
+  except:
+    - master
+
+# Automated docker build will be fired after push!
 push-on-github:
   image: buildpack-deps:latest
   stage: release
