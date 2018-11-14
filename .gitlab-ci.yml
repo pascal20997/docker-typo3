@@ -4,13 +4,14 @@ stages:
   - build
   - test
   - release
+  - clean
 
 # When using dind, it's wise to use the overlayfs driver for
 # improved performance.
 variables:
   DOCKER_DRIVER: overlay2
   DOCKER_REGISTRY: docker-registry.crynton.com
-  CONTAINER_TEST_IMAGE: docker-registry.crynton.com/docker/typo3:$CI_COMMIT_REF_SLUG
+  CONTAINER_TEST_IMAGE: docker-registry.crynton.com/docker/typo3:test-$CI_COMMIT_REF_SLUG
   CONTAINER_RELEASE_IMAGE: docker-registry.crynton.com/docker/typo3
 
 services:
@@ -77,3 +78,8 @@ push-on-github:
     - git config --global user.email "info@crynton.com"
     - git fetch --prune
     - git push --prune git@github.com:pascal20997/docker-typo3.git +refs/remotes/origin/*:refs/heads/* +refs/tags/*:refs/tags/*
+
+remove-test-image:
+  stage: clean
+  script:
+    - docker rmi $CONTAINER_TEST_IMAGE
