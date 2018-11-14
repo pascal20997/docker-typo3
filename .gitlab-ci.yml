@@ -66,6 +66,8 @@ release-tagged:
 push-on-github:
   image: buildpack-deps:latest
   stage: release
+  # we don´t need docker login for this
+  before_script: []
   script:
     - mkdir -p ~/.ssh
     - echo "$DEPLOY_KEY" | tr -d '\r' > ~/.ssh/id_rsa
