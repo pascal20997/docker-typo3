@@ -49,7 +49,7 @@ RUN echo "\nPermitRootLogin no\nPasswordAuthentication no\nUsePAM no\n" >> /etc/
 
 # install composer
 COPY install-composer.sh /app/install-composer.sh
-RUN ls /app && /app/install-composer.sh
+RUN /app/install-composer.sh
 
 # install surf
 RUN mkdir /usr/local/surf \

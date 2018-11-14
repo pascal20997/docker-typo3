@@ -14,4 +14,11 @@ fi
 php composer-setup.php --quiet
 RESULT=$?
 rm composer-setup.php
+
+mv composer.phar /usr/local/bin/composer
+if [ ! $? -eq 0 ]; then
+  echo 'ERROR: Could not move composer.phar'
+  RESULT=1
+fi
+
 exit $RESULT
