@@ -42,6 +42,13 @@ else
     echo "Installation of TYPO3 will be skipped because INSTALL_TYPO3 does not equal true..."
 fi
 
+# enable settings for reverse proxy
+if [ "${REVERSE_PROXY_SETTINGS}" = "true" ]; then
+    echo "Enable settings for reverse proxy usage..."
+    a2enmod remoteip
+    a2enconf reverse-proxy
+fi
+
 # start open-ssh server if START_SSHD = true
 if [ "${START_SSHD}" = "true" ]; then
     echo "Start openssh-server..."

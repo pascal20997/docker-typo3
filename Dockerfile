@@ -12,7 +12,7 @@ ENV START_SSHD true
 ENV REVERSE_PROXY_SETTINGS false
 
 # apache
-RUN a2enmod rewrite && a2enmod deflate && a2enmod remoteip
+RUN a2enmod rewrite && a2enmod deflate
 
 # php
 RUN apt-get update && apt-get install -y imagemagick git nano libwebp-dev libjpeg-dev libfreetype6-dev libicu-dev \
@@ -64,7 +64,8 @@ RUN mkdir /usr/local/surf \
 # add user crynton to group www-data
 RUN useradd -g www-data -m -s "/bin/bash" crynton
 
-COPY 000-default.conf /etc/apache2/sites-available
+COPY data/apache-sites/000-default.conf /etc/apache2/sites-available
+COPY data/apache-conf/reverse-proxy.conf /etc/apache2/conf-avaiable
 COPY crynton-start.sh /usr/local/bin/crynton-start
 RUN chmod +x /usr/local/bin/crynton-start
 
