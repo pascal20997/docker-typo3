@@ -12,7 +12,7 @@ variables:
   DOCKER_REGISTRY: docker-registry.crynton.com
   CONTAINER_TEST_IMAGE: docker-registry.crynton.com/docker/typo3:commit-$CI_COMMIT_SHA
   CONTAINER_LATEST_IMAGE: docker-registry.crynton.com/docker/typo3:latest
-  CONTAINER_TAGGED_IMAGE: docker-registry.crynton.com/docker/typo3:$CI_COMMIT_REF_SLUG
+  CONTAINER_TAGGED_IMAGE: docker-registry.crynton.com/docker/typo3:$CI_COMMIT_REF_NAME
 
 services:
   - docker:dind
@@ -25,6 +25,8 @@ build:
   script:
     - docker build -t $CONTAINER_TEST_IMAGE .
     - docker push $CONTAINER_TEST_IMAGE
+  only:
+    - master
 
 # todo: add better tests
 test-php:
@@ -32,18 +34,24 @@ test-php:
   script:
     - docker pull $CONTAINER_TEST_IMAGE
     - docker run $CONTAINER_TEST_IMAGE php -v
+  only:
+    - master
 
 test-composer:
   stage: test
   script:
     - docker pull $CONTAINER_TEST_IMAGE
     - docker run $CONTAINER_TEST_IMAGE composer -V
+  only:
+    - master
 
 test-imagemagick:
   stage: test
   script:
     - docker pull $CONTAINER_TEST_IMAGE
     - docker run $CONTAINER_TEST_IMAGE convert -version
+  only:
+    - master
 
 release-latest:
   stage: release
@@ -51,6 +59,8 @@ release-latest:
     - docker pull $CONTAINER_TEST_IMAGE
     - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_LATEST_IMAGE
     - docker push $CONTAINER_LATEST_IMAGE
+    only:
+      - master
 
 release-tagged:
   stage: release
@@ -59,10 +69,7 @@ release-tagged:
     - docker tag $CONTAINER_LATEST_IMAGE $CONTAINER_TAGGED_IMAGE
     - docker push $CONTAINER_TAGGED_IMAGE
   only:
-    - branches
     - tags
-  except:
-    - master
 
 # Automated docker build will be fired after push!
 push-on-github:
