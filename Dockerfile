@@ -65,7 +65,7 @@ RUN mkdir /usr/local/surf \
 RUN useradd -g www-data -m -s "/bin/bash" crynton
 
 COPY data/apache-sites/000-default.conf /etc/apache2/sites-available
-COPY data/apache-conf/reverse-proxy.conf /etc/apache2/conf-avaiable
+COPY data/apache-conf/reverse-proxy.conf /etc/apache2/conf-available
 COPY crynton-start.sh /usr/local/bin/crynton-start
 RUN chmod +x /usr/local/bin/crynton-start
 
