@@ -59,8 +59,8 @@ release-latest:
     - docker pull $CONTAINER_TEST_IMAGE
     - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_LATEST_IMAGE
     - docker push $CONTAINER_LATEST_IMAGE
-    only:
-      - master
+  only:
+    - master
 
 release-tagged:
   stage: release
