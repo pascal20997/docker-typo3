@@ -18,6 +18,7 @@ You can configure this docker container by using the following environment varia
 | DOCUMENT_ROOT     | Document root folder                                                      | /home/crynton/htdocs/public (create-project default) |
 | INSTALL_TYPO3     | Set to a different value then true to not install TYPO3 with first boot  | true                                                |
 | START_SSHD        | Set to a different value then true to not start openssh-server on boot   | true                                                | 
+| REVERSE_PROXY_SETTINGS | Enable settings for reverse proxy usage. This will fix wrong ip addresses in the apache log | false                       |
 
 ## Examples
 

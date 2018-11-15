@@ -1,14 +1,18 @@
 FROM php:7.2-apache
 
+LABEL vendor="crynton.com"
+LABEL maintainer="info@crynton.com"
+
 ENV SERVER_ADMIN pleaseSetTheEnvironment@variable.tld
 ENV SURF_DOWNLOAD_URL https://github.com/TYPO3/Surf/releases/download/2.0.0-beta7/surf.phar
 ENV DOCUMENT_ROOT /home/crynton/htdocs/public
 ENV APACHE_RUN_USER crynton
 ENV INSTALL_TYPO3 true
 ENV START_SSHD true
+ENV REVERSE_PROXY_SETTINGS false
 
 # apache
-RUN a2enmod rewrite && a2enmod deflate
+RUN a2enmod rewrite && a2enmod deflate && a2enmod remoteip
 
 # php
 RUN apt-get update && apt-get install -y imagemagick git nano libwebp-dev libjpeg-dev libfreetype6-dev libicu-dev \
