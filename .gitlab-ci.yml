@@ -77,5 +77,6 @@ push-on-github:
     - ssh-keyscan github.com >> ~/.ssh/known_hosts
     - git config --global user.name "Crynton Runner"
     - git config --global user.email "info@crynton.com"
-    - git checkout $CI_COMMIT_REF_NAME
+    - git clone --mirror $CI_REPOSITORY_URL mirror-$CI_PROJECT_NAME
+    - cd mirror-$CI_PROJECT_NAME
     - git push --mirror git@github.com:pascal20997/docker-typo3.git
